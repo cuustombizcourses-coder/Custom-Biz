@@ -325,6 +325,44 @@
 </div>
 
 <script>
+  (function(){
+  const coin = document.getElementById('coin');
+  const shimmer = document.getElementById('shimmer');
+  let spinning = false;
+
+  function doSpin() {
+    if (spinning) return;
+    spinning = true;
+
+    let start = null;
+    const duration = 1400;
+
+    function animate(ts) {
+      if (!start) start = ts;
+      const progress = ts - start;
+      const deg = (progress / duration) * 360;
+      coin.style.transform = 'rotateY(' + deg + 'deg)';
+
+      const half = progress / duration;
+      if (half < 0.5) {
+        shimmer.style.left = (half * 2 * 230 - 100) + '%';
+      } else {
+        shimmer.style.left = '-100%';
+      }
+
+      if (progress < duration) {
+        requestAnimationFrame(animate);
+      } else {
+        coin.style.transform = 'rotateY(360deg)';
+        shimmer.style.left = '-100%';
+        spinning = false;
+        setTimeout(doSpin, 3000);
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  setTimeout(doSpin, 1000);
+})();
 </section>
 <!-- SERVICES -->
 <section id="services">
